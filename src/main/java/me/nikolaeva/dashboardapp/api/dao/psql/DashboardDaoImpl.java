@@ -8,6 +8,7 @@ import java.sql.Statement;
 import me.nikolaeva.dashboardapp.api.dao.DashboardDao;
 import me.nikolaeva.dashboardapp.proto.Post;
 import me.nikolaeva.dashboardapp.proto.PostList;
+import me.nikolaeva.dashboardapp.proto.User;
 
 public class DashboardDaoImpl implements DashboardDao {
 
@@ -35,5 +36,9 @@ public class DashboardDaoImpl implements DashboardDao {
       e.printStackTrace();
     }
     return posts.build();
+  }
+
+  public User getUserByUserToken(String userToken) {
+    return null;
   }
 }

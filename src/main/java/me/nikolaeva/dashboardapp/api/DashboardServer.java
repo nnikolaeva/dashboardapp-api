@@ -2,14 +2,18 @@ package me.nikolaeva.dashboardapp.api;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
+import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
 import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
 import me.nikolaeva.dashboardapp.api.services.PostServlet;
+import me.nikolaeva.dashboardapp.api.services.SeedLoggedUserFilter;
 import me.nikolaeva.dashboardapp.proto.User;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -36,6 +40,13 @@ public class DashboardServer {
                   protected void configureServlets() {
                     serve("/login").with(LoginServlet.class);
                     serve("/post").with(PostServlet.class);
+                    filter("/*").through(SeedLoggedUserFilter.class);
+                    bind(User.class).annotatedWith(Names.named("user")).toProvider(
+                        new Provider<User>() {
+                          public User get() {
+                            throw new RuntimeException("User should not be null");
+                          }
+                        }).in(RequestScoped.class);
                   }
                 });
           }
