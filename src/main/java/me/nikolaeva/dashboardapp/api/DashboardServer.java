@@ -1,18 +1,18 @@
-package com.natalia.dashboardapp;
+package me.nikolaeva.dashboardapp.api;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.natalia.dashboardapp.services.LoginServlet;
+import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
+import me.nikolaeva.dashboardapp.proto.User;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
 
 public class DashboardServer {
 
