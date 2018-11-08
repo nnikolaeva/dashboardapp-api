@@ -14,6 +14,7 @@ import java.util.EnumSet;
 import javax.servlet.DispatcherType;
 import me.nikolaeva.dashboardapp.api.services.PostServlet;
 import me.nikolaeva.dashboardapp.api.services.SeedLoggedUserFilter;
+import me.nikolaeva.dashboardapp.api.services.UserLoggedInRequiredFilter;
 import me.nikolaeva.dashboardapp.proto.User;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -41,6 +42,7 @@ public class DashboardServer {
                     serve("/login").with(LoginServlet.class);
                     serve("/post").with(PostServlet.class);
                     filter("/*").through(SeedLoggedUserFilter.class);
+                    filter("/*").through(UserLoggedInRequiredFilter.class);
                     bind(User.class).annotatedWith(Names.named("user")).toProvider(
                         new Provider<User>() {
                           public User get() {
