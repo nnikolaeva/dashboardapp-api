@@ -5,9 +5,11 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
 import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
+import me.nikolaeva.dashboardapp.api.services.PostServlet;
 import me.nikolaeva.dashboardapp.proto.User;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -28,10 +30,12 @@ public class DashboardServer {
           @Override
           protected Injector getInjector() {
             return Guice.createInjector(
+                new PsqlDaoModule(),
                 new ServletModule() {
                   @Override
                   protected void configureServlets() {
                     serve("/login").with(LoginServlet.class);
+                    serve("/post").with(PostServlet.class);
                   }
                 });
           }
