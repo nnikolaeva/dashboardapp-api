@@ -38,6 +38,68 @@ public class DashboardDaoImpl implements DashboardDao {
     return posts.build();
   }
 
+  @Override
+  public void addPost(Post post) {
+    try {
+      Statement statement = connection.createStatement();
+      String query = "INSERT INTO post(id, user_id, content) VALUES (\'"
+          + post.getId()
+          + "\', "
+          + "\'"
+          + post.getUserId()
+          + "\', \'"
+          + post.getContent()
+          + "\') ";
+      System.out.println(query);
+      statement.executeUpdate(query);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void deletePost(String id) {
+    try {
+      Statement statement = connection.createStatement();
+
+      ResultSet rs = statement.executeQuery("SELECT * FROM post WHERE id = \'" + id + "\'");
+      if (!rs.next()) {
+        throw new RuntimeException("record with id " + id + " is not found in database");
+      }
+
+      statement.executeUpdate("DELETE FROM post WHERE id = \'" + id + "\'");
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void updatePost(Post post) {
+    try {
+      Statement statement = connection.createStatement();
+
+      ResultSet rs =
+          statement.executeQuery("SELECT * FROM post WHERE id = \'" + post.getId() + "\'");
+      if (!rs.next()) {
+        throw new RuntimeException("record with id " + post.getId() + " is not found in database");
+      }
+      String sql =
+          "UPDATE post SET content="
+              + "\'"
+              + post.getContent()
+              + "\'"
+              + " where id = '"
+              + post.getId()
+              + "'";
+      System.out.println(sql);
+      statement.executeUpdate(sql);
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+  }
+
   public User getUserByUserToken(String userToken) {
     User user = null;
     try {

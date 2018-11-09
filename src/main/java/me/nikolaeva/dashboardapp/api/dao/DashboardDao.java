@@ -1,11 +1,18 @@
 package me.nikolaeva.dashboardapp.api.dao;
 
+import me.nikolaeva.dashboardapp.proto.Post;
 import me.nikolaeva.dashboardapp.proto.PostList;
 import me.nikolaeva.dashboardapp.proto.User;
 
 public interface DashboardDao {
 
   PostList getPosts();
+
+  void addPost(Post post);
+
+  void deletePost(String id);
+
+  void updatePost(Post post);
 
   User getUserByUserToken(String userToken);
 
