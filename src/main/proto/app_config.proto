@@ -15,6 +15,9 @@ message GoogleOAuthConfig {
   string client_secret = 2;
   string grant_type = 3;
   string redirect_url = 4;
+  string response_type = 5;
+  string scope = 6;
+  string state = 7;
 }
 
 message PostgresqlConfig {
