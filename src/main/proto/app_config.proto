@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package dashboardapp.proto;
+
+option java_package = "me.nikolaeva.dashboardapp.proto";
+option java_multiple_files = true;
+
+message AppConfig {
+  GoogleOAuthConfig google_oauth_config = 1;
+  PostgresqlConfig postgresql_config = 2;
+}
+
+message GoogleOAuthConfig {
+  string client_id = 1;
+  string client_secret = 2;
+  string grant_type = 3;
+  string redirect_url = 4;
+}
+
+message PostgresqlConfig {
+  string jdbc_url = 1;
+}

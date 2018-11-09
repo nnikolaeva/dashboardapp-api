@@ -27,7 +27,7 @@ public class UserLoggedInRequiredFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     HttpServletResponse httpResponse = (HttpServletResponse) response;
-    
+
     if (!isUserLoggedIn()) {
       httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     } else {

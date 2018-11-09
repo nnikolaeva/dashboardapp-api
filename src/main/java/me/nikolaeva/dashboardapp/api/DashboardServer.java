@@ -1,5 +1,7 @@
 package me.nikolaeva.dashboardapp.api;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
@@ -8,6 +10,8 @@ import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
+import com.google.protobuf.TextFormat;
+import java.io.File;
 import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
 import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import java.util.EnumSet;
@@ -15,6 +19,7 @@ import javax.servlet.DispatcherType;
 import me.nikolaeva.dashboardapp.api.services.PostServlet;
 import me.nikolaeva.dashboardapp.api.services.SeedLoggedUserFilter;
 import me.nikolaeva.dashboardapp.api.services.UserLoggedInRequiredFilter;
+import me.nikolaeva.dashboardapp.proto.AppConfig;
 import me.nikolaeva.dashboardapp.proto.User;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -59,6 +64,15 @@ public class DashboardServer {
     HandlerList handlers = new HandlerList();
     handlers.setHandlers(new Handler[]{servletContextHandler});
     server.setHandler(handlers);
+
+
+    // fetch config file
+    String fileContent = Files.asCharSource(new File("config.textproto"), Charsets.UTF_8).read();
+    AppConfig.Builder config = AppConfig.newBuilder();
+    TextFormat.getParser().merge(fileContent, config);
+    config.build();
+    System.out.println(config.getPostgresqlConfig().getJdbcUrl());
+
 
     // start server
     server.start();
