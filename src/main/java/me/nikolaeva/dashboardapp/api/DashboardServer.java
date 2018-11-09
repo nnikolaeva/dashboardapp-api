@@ -12,6 +12,7 @@ import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.google.protobuf.TextFormat;
 import java.io.File;
+import me.nikolaeva.dashboardapp.api.dao.appconfig.AppConfigModule;
 import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
 import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import java.util.EnumSet;
@@ -41,13 +42,14 @@ public class DashboardServer {
           protected Injector getInjector() {
             return Guice.createInjector(
                 new PsqlDaoModule(),
+                new AppConfigModule(),
                 new ServletModule() {
                   @Override
                   protected void configureServlets() {
                     serve("/login").with(LoginServlet.class);
                     serve("/post").with(PostServlet.class);
                     filter("/*").through(SeedLoggedUserFilter.class);
-                    filter("/*").through(UserLoggedInRequiredFilter.class);
+//                    filter("/*").through(UserLoggedInRequiredFilter.class);
                     bind(User.class).annotatedWith(Names.named("user")).toProvider(
                         new Provider<User>() {
                           public User get() {
@@ -64,15 +66,6 @@ public class DashboardServer {
     HandlerList handlers = new HandlerList();
     handlers.setHandlers(new Handler[]{servletContextHandler});
     server.setHandler(handlers);
-
-
-    // fetch config file
-    String fileContent = Files.asCharSource(new File("config.textproto"), Charsets.UTF_8).read();
-    AppConfig.Builder config = AppConfig.newBuilder();
-    TextFormat.getParser().merge(fileContent, config);
-    config.build();
-    System.out.println(config.getPostgresqlConfig().getJdbcUrl());
-
 
     // start server
     server.start();

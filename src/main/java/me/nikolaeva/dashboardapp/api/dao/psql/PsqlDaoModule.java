@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.inject.Named;
 import me.nikolaeva.dashboardapp.api.dao.DashboardDao;
+import me.nikolaeva.dashboardapp.proto.AppConfig;
 
 public class PsqlDaoModule extends AbstractModule {
 
@@ -18,15 +19,14 @@ public class PsqlDaoModule extends AbstractModule {
 
   @Singleton
   @Provides
-  Connection provideConnection() throws SQLException {
+  Connection provideConnection(@Named("appConfig") AppConfig config) throws SQLException {
     try {
       Class.forName("org.postgresql.Driver");
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
 
-    String dbUrl = "jdbc:postgresql://localhost/Natalia";
-    return DriverManager.getConnection(dbUrl);
+    return DriverManager.getConnection(config.getPostgresqlConfig().getJdbcUrl());
   }
 
 }
