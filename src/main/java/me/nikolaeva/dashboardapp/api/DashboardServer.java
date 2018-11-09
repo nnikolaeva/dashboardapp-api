@@ -1,7 +1,5 @@
 package me.nikolaeva.dashboardapp.api;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
@@ -10,17 +8,15 @@ import com.google.inject.servlet.GuiceFilter;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
-import com.google.protobuf.TextFormat;
-import java.io.File;
-import me.nikolaeva.dashboardapp.api.dao.appconfig.AppConfigModule;
-import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
-import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
+import me.nikolaeva.dashboardapp.api.dao.appconfig.AppConfigModule;
+import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
+import me.nikolaeva.dashboardapp.api.services.AuthWithGoogleServlet;
+import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import me.nikolaeva.dashboardapp.api.services.PostServlet;
 import me.nikolaeva.dashboardapp.api.services.SeedLoggedUserFilter;
 import me.nikolaeva.dashboardapp.api.services.UserLoggedInRequiredFilter;
-import me.nikolaeva.dashboardapp.proto.AppConfig;
 import me.nikolaeva.dashboardapp.proto.User;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -48,8 +44,9 @@ public class DashboardServer {
                   protected void configureServlets() {
                     serve("/login").with(LoginServlet.class);
                     serve("/post").with(PostServlet.class);
+                    serve("/authwithcode").with(AuthWithGoogleServlet.class);
                     filter("/*").through(SeedLoggedUserFilter.class);
-//                    filter("/*").through(UserLoggedInRequiredFilter.class);
+                    filter("/*").through(UserLoggedInRequiredFilter.class);
                     bind(User.class).annotatedWith(Names.named("user")).toProvider(
                         new Provider<User>() {
                           public User get() {

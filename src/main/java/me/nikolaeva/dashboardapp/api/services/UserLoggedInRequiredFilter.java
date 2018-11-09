@@ -11,6 +11,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.nikolaeva.dashboardapp.proto.User;
 
@@ -27,8 +28,9 @@ public class UserLoggedInRequiredFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     HttpServletResponse httpResponse = (HttpServletResponse) response;
+    HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-    if (!isUserLoggedIn()) {
+    if (httpRequest.getRequestURI().contains("post") && !isUserLoggedIn()) {
       httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     } else {
       chain.doFilter(request, response);
@@ -38,10 +40,10 @@ public class UserLoggedInRequiredFilter implements Filter {
 
   private boolean isUserLoggedIn() {
     User currentUser = userProvider.get();
-    if (!currentUser.getId().equals("")) {
-      return true;
+    if (currentUser.getId().equals("")) {
+      return false;
     }
-    return false;
+    return true;
   }
 
 

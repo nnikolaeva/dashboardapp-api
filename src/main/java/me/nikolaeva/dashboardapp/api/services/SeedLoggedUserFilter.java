@@ -41,6 +41,7 @@ public class SeedLoggedUserFilter implements Filter {
     }
 
     httpRequest.setAttribute(Key.get(User.class, Names.named("user")).toString(), user);
+
     chain.doFilter(request, response);
   }
 

@@ -39,6 +39,81 @@ public class DashboardDaoImpl implements DashboardDao {
   }
 
   public User getUserByUserToken(String userToken) {
-    return null;
+    User user = null;
+    try {
+      Statement statement = connection.createStatement();
+      ResultSet rs = statement
+          .executeQuery("SELECT * from user_token where user_token = \'" + userToken + "\'");
+      if (rs.next()) {
+        ResultSet resultSet = statement
+            .executeQuery("SELECT * FROM users WHERE id = \'" + rs.getString("user_id") + "\'");
+        if (resultSet.next()) {
+          user = User.newBuilder().setId(resultSet.getString("id"))
+              .setName(resultSet.getString("name"))
+              .setEmail(resultSet.getString("email"))
+              .setGoogleProfileId(resultSet.getString("google_profile_id"))
+              .setUserToken(userToken)
+              .build();
+        }
+      }
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return user;
+  }
+
+  @Override
+  public User getUserByProfileId(String profileId) {
+    User user = null;
+    try {
+      Statement statement = connection.createStatement();
+      String query = "SELECT * FROM users WHERE google_profile_id = \'" + profileId + "\'";
+      ResultSet resultSet =
+          statement.executeQuery(query);
+      if (resultSet.next()) {
+        user = User.newBuilder().setId(resultSet.getString("id"))
+            .setName(resultSet.getString("name"))
+            .setEmail(resultSet.getString("email"))
+            .build();
+      }
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return user;
+  }
+
+  @Override
+  public void createUser(User user) {
+    try {
+      Statement statement = connection.createStatement();
+      String query =
+          "INSERT INTO users (id, name, email, google_profile_id) values (\'"
+              + user.getId()
+              + "\', \'"
+              + user.getName()
+              + "\', \'"
+              + user.getEmail()
+              + "\', \'"
+              + user.getGoogleProfileId()
+              + "\')";
+      statement.executeUpdate(query);
+
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void addUserToken(String userId, String userToken) {
+    try {
+      Statement statement = connection.createStatement();
+      String query = "INSERT INTO user_token (user_id, user_token) values(\'" + userId + "\', \'"
+          + userToken + "\')";
+      statement.executeUpdate(query);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }
