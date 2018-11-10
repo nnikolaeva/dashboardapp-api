@@ -87,7 +87,7 @@ public class AuthWithGoogleServlet extends HttpServlet {
       }
 
       Payload payload = getPayload(token);
-      User user = dao.getUserByProfileId(payload.getSubject());
+      User user = dao.getUserByProfileId(payload.getEmail());
       if (user == null) {
         String id = UUID.randomUUID().toString();
         user = createUserFromPayload(payload, id);
@@ -137,7 +137,6 @@ public class AuthWithGoogleServlet extends HttpServlet {
     return User.newBuilder()
         .setEmail(payload.getEmail())
         .setName(name)
-        .setGoogleProfileId(payload.getSubject())
         .setId(id)
         .build();
   }

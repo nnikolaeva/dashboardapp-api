@@ -6,7 +6,7 @@ import me.nikolaeva.dashboardapp.proto.User;
 
 public interface DashboardDao {
 
-  PostList getPosts();
+  PostList getPosts(String id);
 
   void addPost(Post post);
 

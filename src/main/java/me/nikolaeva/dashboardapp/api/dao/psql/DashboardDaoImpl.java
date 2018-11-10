@@ -19,11 +19,11 @@ public class DashboardDaoImpl implements DashboardDao {
     this.connection = connection;
   }
 
-  public PostList getPosts() {
+  public PostList getPosts(String id) {
     PostList.Builder posts = PostList.newBuilder();
     try {
       Statement statement = connection.createStatement();
-      String query = "SELECT * FROM post";
+      String query = "SELECT * FROM post WHERE user_id = \'" + id + "\'";
       ResultSet resultSet = statement.executeQuery(query);
       while (resultSet.next()) {
         posts.addPosts(Post.newBuilder().setId(resultSet.getString("id"))
@@ -113,7 +113,6 @@ public class DashboardDaoImpl implements DashboardDao {
           user = User.newBuilder().setId(resultSet.getString("id"))
               .setName(resultSet.getString("name"))
               .setEmail(resultSet.getString("email"))
-              .setGoogleProfileId(resultSet.getString("google_profile_id"))
               .setUserToken(userToken)
               .build();
         }
@@ -126,11 +125,11 @@ public class DashboardDaoImpl implements DashboardDao {
   }
 
   @Override
-  public User getUserByProfileId(String profileId) {
+  public User getUserByProfileId(String email) {
     User user = null;
     try {
       Statement statement = connection.createStatement();
-      String query = "SELECT * FROM users WHERE google_profile_id = \'" + profileId + "\'";
+      String query = "SELECT * FROM users WHERE email = \'" + email + "\'";
       ResultSet resultSet =
           statement.executeQuery(query);
       if (resultSet.next()) {
@@ -151,14 +150,12 @@ public class DashboardDaoImpl implements DashboardDao {
     try {
       Statement statement = connection.createStatement();
       String query =
-          "INSERT INTO users (id, name, email, google_profile_id) values (\'"
+          "INSERT INTO users (id, name, email) values (\'"
               + user.getId()
               + "\', \'"
               + user.getName()
               + "\', \'"
               + user.getEmail()
-              + "\', \'"
-              + user.getGoogleProfileId()
               + "\')";
       statement.executeUpdate(query);
 
