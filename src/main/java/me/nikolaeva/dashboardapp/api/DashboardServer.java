@@ -40,6 +40,7 @@ public class DashboardServer {
           protected Injector getInjector() {
             return Guice.createInjector(
                 new PsqlDaoModule(),
+                new AppConfigModule(),
                 new ServletModule() {
                   @Override
                   protected void configureServlets() {

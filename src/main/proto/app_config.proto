@@ -8,6 +8,7 @@ option java_multiple_files = true;
 message AppConfig {
   GoogleOAuthConfig google_oauth_config = 1;
   PostgresqlConfig postgresql_config = 2;
+  RunConfig run_config = 3;
 }
 
 message GoogleOAuthConfig {
@@ -22,4 +23,10 @@ message GoogleOAuthConfig {
 
 message PostgresqlConfig {
   string jdbc_url = 1;
+}
+
+message RunConfig {
+  string port = 1;
+  string base_url = 2;
+  string ui_url = 3;
 }

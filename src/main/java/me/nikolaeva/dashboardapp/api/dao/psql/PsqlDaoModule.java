@@ -19,14 +19,14 @@ public class PsqlDaoModule extends AbstractModule {
 
   @Singleton
   @Provides
-  Connection provideConnection() throws SQLException {
+  Connection provideConnection(@Named("appConfig") AppConfig config) throws SQLException {
     try {
       Class.forName("org.postgresql.Driver");
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
 
-    return DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"));
+    return DriverManager.getConnection(config.getPostgresqlConfig().getJdbcUrl());
   }
 
 }
