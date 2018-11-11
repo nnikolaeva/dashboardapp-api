@@ -17,14 +17,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.nikolaeva.dashboardapp.api.dao.DashboardDao;
-import me.nikolaeva.dashboardapp.proto.AppConfig;
 import me.nikolaeva.dashboardapp.proto.User;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -40,12 +38,10 @@ import org.json.simple.parser.ParseException;
 @Singleton
 public class AuthWithGoogleServlet extends HttpServlet {
 
-  private final AppConfig appConfig;
   private final DashboardDao dao;
 
   @Inject
-  public AuthWithGoogleServlet(@Named("appConfig") AppConfig appConfig, DashboardDao dao) {
-    this.appConfig = appConfig;
+  public AuthWithGoogleServlet(DashboardDao dao) {
     this.dao = dao;
   }
 
@@ -62,14 +58,14 @@ public class AuthWithGoogleServlet extends HttpServlet {
       List<NameValuePair> arguments = new ArrayList<>(3);
       arguments.add(new BasicNameValuePair("code", code));
       arguments
-          .add(new BasicNameValuePair("client_id", appConfig.getGoogleOauthConfig().getClientId()));
+          .add(new BasicNameValuePair("client_id", System.getenv("CLIENT_ID")));
       arguments.add(new BasicNameValuePair("client_secret",
-          appConfig.getGoogleOauthConfig().getClientSecret()));
+          System.getenv("CLIENT_SECRET")));
       arguments.add(
           new BasicNameValuePair(
-              "redirect_uri", appConfig.getGoogleOauthConfig().getRedirectUrl()));
+              "redirect_uri", System.getenv("REDIRECT_URL")));
       arguments.add(
-          new BasicNameValuePair("grant_type", appConfig.getGoogleOauthConfig().getGrantType()));
+          new BasicNameValuePair("grant_type", System.getenv("GRANT_TYPE")));
 
       method.setEntity(new UrlEncodedFormEntity(arguments));
       HttpClient client = HttpClientBuilder.create().build();
@@ -102,7 +98,7 @@ public class AuthWithGoogleServlet extends HttpServlet {
 
       Cookie cookie = new Cookie("userToken", user.getUserToken());
       resp.addCookie(cookie);
-      resp.sendRedirect("http://localhost:8080/post");
+      resp.sendRedirect(System.getenv("UI_URL"));
     }
   }
 
@@ -115,7 +111,7 @@ public class AuthWithGoogleServlet extends HttpServlet {
       GoogleIdTokenVerifier verifier =
           new GoogleIdTokenVerifier.Builder(httpTransport, jsonFactory)
               .setAudience(
-                  Collections.singletonList(appConfig.getGoogleOauthConfig().getClientId()))
+                  Collections.singletonList(System.getenv("CLIENT_ID")))
               .build();
 
       GoogleIdToken idToken = verifier.verify(token);

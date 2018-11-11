@@ -13,28 +13,21 @@ import me.nikolaeva.dashboardapp.proto.AppConfig;
 @Singleton
 public class LoginServlet extends HttpServlet {
 
-  private final AppConfig appConfig;
-
-  @Inject
-  public LoginServlet(@Named("appConfig") AppConfig appConfig) {
-    this.appConfig = appConfig;
-  }
-
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     HttpServletResponse httpResponse = (HttpServletResponse) resp;
     String url =
         "https://accounts.google.com/o/oauth2/v2/auth?scope="
-            + appConfig.getGoogleOauthConfig().getScope()
+            + System.getenv("SCOPE")
             + "&redirect_uri="
-            + appConfig.getGoogleOauthConfig().getRedirectUrl()
+            + System.getenv("REDIRECT_URL")
             + "&client_id="
-            + appConfig.getGoogleOauthConfig().getClientId()
+            + System.getenv("CLIENT_ID")
             + "&response_type="
-            + appConfig.getGoogleOauthConfig().getResponseType()
+            + System.getenv("RESPONSE_TYPE")
             + "&state="
-            + appConfig.getGoogleOauthConfig().getState();
+            + System.getenv("STATE");
     httpResponse.sendRedirect(url);
   }
 }

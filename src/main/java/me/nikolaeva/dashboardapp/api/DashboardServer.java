@@ -21,12 +21,14 @@ import me.nikolaeva.dashboardapp.proto.User;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 public class DashboardServer {
 
   public static void main(String[] args) throws Exception {
-    Server server = new Server(8080);
+    Server server = new Server(Integer.valueOf(System.getenv("PORT")));
 
     ServletContextHandler servletContextHandler =
         new ServletContextHandler();
@@ -38,7 +40,6 @@ public class DashboardServer {
           protected Injector getInjector() {
             return Guice.createInjector(
                 new PsqlDaoModule(),
-                new AppConfigModule(),
                 new ServletModule() {
                   @Override
                   protected void configureServlets() {
@@ -58,6 +59,8 @@ public class DashboardServer {
           }
         });
 
+    servletContextHandler.addFilter(createHolder(), "/*", EnumSet.of(DispatcherType.REQUEST));
+
     servletContextHandler.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 
     HandlerList handlers = new HandlerList();
@@ -67,6 +70,17 @@ public class DashboardServer {
     // start server
     server.start();
     server.join();
+  }
+
+  private static FilterHolder createHolder() {
+    FilterHolder holder = new FilterHolder(new CrossOriginFilter());
+    holder.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+    holder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, System.getenv("UI_URL"));
+    holder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_CREDENTIALS_HEADER, "true");
+
+    holder.setInitParameter(
+        CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD,OPTIONS,DELETE");
+    return holder;
   }
 
 }
