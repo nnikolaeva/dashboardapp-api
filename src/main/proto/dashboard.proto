@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package dashboardapp.proto;
+option java_package = "me.nikolaeva.dashboardapp.proto";
+option java_multiple_files = true;
+
+message Dashboard {
+  string id = 1;
+  string user_id = 2;
+  string name = 3;
+
+}
+
+message DashboardList {
+  repeated Dashboard posts = 1;
+}
