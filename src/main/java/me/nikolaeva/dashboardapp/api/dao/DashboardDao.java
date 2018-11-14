@@ -22,5 +22,7 @@ public interface DashboardDao {
 
   void addUserToken(String userId, String userToken);
 
+  void deleteUserToken(String userId, String userToken);
+
 
 }

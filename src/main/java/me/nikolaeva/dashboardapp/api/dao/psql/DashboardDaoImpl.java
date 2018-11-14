@@ -50,7 +50,6 @@ public class DashboardDaoImpl implements DashboardDao {
           + "\', \'"
           + post.getContent()
           + "\') ";
-      System.out.println(query);
       statement.executeUpdate(query);
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -91,7 +90,6 @@ public class DashboardDaoImpl implements DashboardDao {
               + " where id = '"
               + post.getId()
               + "'";
-      System.out.println(sql);
       statement.executeUpdate(sql);
 
     } catch (SQLException e) {
@@ -170,6 +168,19 @@ public class DashboardDaoImpl implements DashboardDao {
       Statement statement = connection.createStatement();
       String query = "INSERT INTO user_token (user_id, user_token) values(\'" + userId + "\', \'"
           + userToken + "\')";
+      statement.executeUpdate(query);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void deleteUserToken(String userId, String userToken) {
+    try {
+      Statement statement = connection.createStatement();
+      String query =
+          "DELETE FROM user_token WHERE user_id = \'" + userId + "\' AND " + "user_token = "
+              + "\'" + userToken + "\'";
       statement.executeUpdate(query);
     } catch (SQLException e) {
       e.printStackTrace();

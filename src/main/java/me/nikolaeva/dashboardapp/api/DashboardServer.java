@@ -14,6 +14,7 @@ import me.nikolaeva.dashboardapp.api.dao.appconfig.AppConfigModule;
 import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
 import me.nikolaeva.dashboardapp.api.services.AuthWithGoogleServlet;
 import me.nikolaeva.dashboardapp.api.services.LoginServlet;
+import me.nikolaeva.dashboardapp.api.services.LogoutServlet;
 import me.nikolaeva.dashboardapp.api.services.PostServlet;
 import me.nikolaeva.dashboardapp.api.services.SeedLoggedUserFilter;
 import me.nikolaeva.dashboardapp.api.services.UserLoggedInRequiredFilter;
@@ -45,6 +46,7 @@ public class DashboardServer {
                   @Override
                   protected void configureServlets() {
                     serve("/login").with(LoginServlet.class);
+                    serve("/logout").with(LogoutServlet.class);
                     serve("/post").with(PostServlet.class);
                     serve("/authwithcode").with(AuthWithGoogleServlet.class);
                     filter("/*").through(SeedLoggedUserFilter.class);
