@@ -8,6 +8,7 @@ message Post {
   string id = 1;
   string user_id = 2;
   string content = 3;
+  string dashboard_id = 4;
 
 }
 
