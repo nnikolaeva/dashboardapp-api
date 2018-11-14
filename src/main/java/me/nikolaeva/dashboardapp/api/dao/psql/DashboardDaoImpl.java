@@ -209,4 +209,22 @@ public class DashboardDaoImpl implements DashboardDao {
 
     return list.build();
   }
+
+  @Override
+  public void addDashboard(Dashboard dashboard) {
+    try {
+      Statement statement = connection.createStatement();
+      String query = "INSERT INTO dashboard(id, user_id, name) VALUES (\'"
+          + dashboard.getId()
+          + "\', "
+          + "\'"
+          + dashboard.getUserId()
+          + "\', \'"
+          + dashboard.getName()
+          + "\') ";
+      statement.executeUpdate(query);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
