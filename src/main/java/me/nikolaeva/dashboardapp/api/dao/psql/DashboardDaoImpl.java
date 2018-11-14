@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import me.nikolaeva.dashboardapp.api.dao.DashboardDao;
+import me.nikolaeva.dashboardapp.proto.Dashboard;
+import me.nikolaeva.dashboardapp.proto.DashboardList;
 import me.nikolaeva.dashboardapp.proto.Post;
 import me.nikolaeva.dashboardapp.proto.PostList;
 import me.nikolaeva.dashboardapp.proto.User;
@@ -185,5 +187,26 @@ public class DashboardDaoImpl implements DashboardDao {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public DashboardList getDashboards(String id) {
+    DashboardList.Builder list = DashboardList.newBuilder();
+    try {
+      Statement statement = connection.createStatement();
+      String query = "SELECT * FROM post WHERE user_id = \'" + id + "\'";
+      ResultSet resultSet = statement.executeQuery(query);
+      while (resultSet.next()) {
+        list.addDashboard(Dashboard.newBuilder()
+            .setId(resultSet.getString("id"))
+            .setUserId(resultSet.getString("user_id"))
+            .setName(resultSet.getString("name"))
+            .build());
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return list.build();
   }
 }

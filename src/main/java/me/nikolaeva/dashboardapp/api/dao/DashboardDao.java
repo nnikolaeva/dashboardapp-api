@@ -1,5 +1,6 @@
 package me.nikolaeva.dashboardapp.api.dao;
 
+import me.nikolaeva.dashboardapp.proto.DashboardList;
 import me.nikolaeva.dashboardapp.proto.Post;
 import me.nikolaeva.dashboardapp.proto.PostList;
 import me.nikolaeva.dashboardapp.proto.User;
@@ -23,6 +24,8 @@ public interface DashboardDao {
   void addUserToken(String userId, String userToken);
 
   void deleteUserToken(String userId, String userToken);
+
+  DashboardList getDashboards(String id);
 
 
 }
