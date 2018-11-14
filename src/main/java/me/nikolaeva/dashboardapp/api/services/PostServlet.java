@@ -51,7 +51,7 @@ public class PostServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
+      throws IOException {
     String data = "";
     BufferedReader in = new BufferedReader(new InputStreamReader(req.getInputStream()));
     data = in.lines().collect(Collectors.joining(System.lineSeparator()));

@@ -44,11 +44,13 @@ public class DashboardDaoImpl implements DashboardDao {
   public void addPost(Post post) {
     try {
       Statement statement = connection.createStatement();
-      String query = "INSERT INTO post(id, user_id, content) VALUES (\'"
+      String query = "INSERT INTO post(id, user_id, content, dashboard_id) VALUES (\'"
           + post.getId()
           + "\', "
           + "\'"
           + post.getUserId()
+          + "\', \'"
+          + post.getDashboardId()
           + "\', \'"
           + post.getContent()
           + "\') ";
