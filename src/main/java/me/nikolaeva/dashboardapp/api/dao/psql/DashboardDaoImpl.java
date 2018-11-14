@@ -194,10 +194,10 @@ public class DashboardDaoImpl implements DashboardDao {
     DashboardList.Builder list = DashboardList.newBuilder();
     try {
       Statement statement = connection.createStatement();
-      String query = "SELECT * FROM post WHERE user_id = \'" + id + "\'";
+      String query = "SELECT * FROM dashboard WHERE user_id = \'" + id + "\'";
       ResultSet resultSet = statement.executeQuery(query);
       while (resultSet.next()) {
-        list.addDashboard(Dashboard.newBuilder()
+        list.addDashboards(Dashboard.newBuilder()
             .setId(resultSet.getString("id"))
             .setUserId(resultSet.getString("user_id"))
             .setName(resultSet.getString("name"))

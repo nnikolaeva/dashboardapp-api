@@ -13,6 +13,7 @@ import javax.servlet.DispatcherType;
 import me.nikolaeva.dashboardapp.api.dao.appconfig.AppConfigModule;
 import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
 import me.nikolaeva.dashboardapp.api.services.AuthWithGoogleServlet;
+import me.nikolaeva.dashboardapp.api.services.DashboardServlet;
 import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import me.nikolaeva.dashboardapp.api.services.LogoutServlet;
 import me.nikolaeva.dashboardapp.api.services.PostServlet;
@@ -48,6 +49,7 @@ public class DashboardServer {
                     serve("/login").with(LoginServlet.class);
                     serve("/logout").with(LogoutServlet.class);
                     serve("/post").with(PostServlet.class);
+                    serve("/dashboard").with(DashboardServlet.class);
                     serve("/authwithcode").with(AuthWithGoogleServlet.class);
                     filter("/*").through(SeedLoggedUserFilter.class);
                     filter("/*").through(UserLoggedInRequiredFilter.class);
@@ -70,7 +72,6 @@ public class DashboardServer {
     handlers.setHandlers(new Handler[]{servletContextHandler});
     server.setHandler(handlers);
 
-    // start server
     server.start();
     server.join();
   }
@@ -78,7 +79,8 @@ public class DashboardServer {
   private static FilterHolder createHolder() {
     FilterHolder holder = new FilterHolder(new CrossOriginFilter());
     holder.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-    holder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, System.getenv("UI_URL"));
+    holder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER,
+        System.getenv("UI_URL"));
     holder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_CREDENTIALS_HEADER, "true");
 
     holder.setInitParameter(

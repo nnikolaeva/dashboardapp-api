@@ -12,5 +12,5 @@ message Dashboard {
 }
 
 message DashboardList {
-  repeated Dashboard dashboard = 1;
+  repeated Dashboard dashboards = 1;
 }

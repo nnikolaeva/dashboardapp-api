@@ -49,6 +49,7 @@ public class DashboardServlet extends HttpServlet {
     dashboard.setUserId(loggedUser.getId());
     dashboard.setId(UUID.randomUUID().toString());
     dao.addDashboard(dashboard.build());
+    resp.getWriter().write(JsonFormat.printer().print(dashboard));
   }
 
 
