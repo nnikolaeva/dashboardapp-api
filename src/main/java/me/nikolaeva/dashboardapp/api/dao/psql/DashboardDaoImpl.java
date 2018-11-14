@@ -21,11 +21,11 @@ public class DashboardDaoImpl implements DashboardDao {
     this.connection = connection;
   }
 
-  public PostList getPosts(String id) {
+  public PostList getPosts(String id, String dashboardId) {
     PostList.Builder posts = PostList.newBuilder();
     try {
       Statement statement = connection.createStatement();
-      String query = "SELECT * FROM post WHERE user_id = \'" + id + "\'";
+      String query = "SELECT * FROM post WHERE user_id = \'" + id + "\' and dashboard_id = \' " + dashboardId + "\'";
       ResultSet resultSet = statement.executeQuery(query);
       while (resultSet.next()) {
         posts.addPosts(Post.newBuilder().setId(resultSet.getString("id"))
