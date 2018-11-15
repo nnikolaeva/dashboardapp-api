@@ -30,7 +30,7 @@ public class UserLoggedInRequiredFilter implements Filter {
     HttpServletResponse httpResponse = (HttpServletResponse) response;
     HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-    if (!httpRequest.getMethod().equalsIgnoreCase("OPTIONS") && httpRequest.getRequestURI().contains("post") && !isUserLoggedIn()) {
+    if (!httpRequest.getMethod().equalsIgnoreCase("OPTIONS") && (httpRequest.getRequestURI().contains("post") || httpRequest.getRequestURI().contains("dashboard")) && !isUserLoggedIn()) {
       httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
     } else {
       chain.doFilter(request, response);

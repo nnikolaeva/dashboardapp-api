@@ -25,7 +25,8 @@ public class DashboardDaoImpl implements DashboardDao {
     PostList.Builder posts = PostList.newBuilder();
     try {
       Statement statement = connection.createStatement();
-      String query = "SELECT * FROM post WHERE user_id = \'" + id + "\' and dashboard_id = \' " + dashboardId + "\'";
+      String query = "SELECT * FROM post WHERE user_id = \'" + id + "\' AND dashboard_id = \'" + dashboardId + "\'";
+      System.out.println(query);
       ResultSet resultSet = statement.executeQuery(query);
       while (resultSet.next()) {
         posts.addPosts(Post.newBuilder().setId(resultSet.getString("id"))
@@ -50,9 +51,9 @@ public class DashboardDaoImpl implements DashboardDao {
           + "\'"
           + post.getUserId()
           + "\', \'"
-          + post.getDashboardId()
-          + "\', \'"
           + post.getContent()
+          + "\', \'"
+          + post.getDashboardId()
           + "\') ";
       statement.executeUpdate(query);
     } catch (SQLException e) {
