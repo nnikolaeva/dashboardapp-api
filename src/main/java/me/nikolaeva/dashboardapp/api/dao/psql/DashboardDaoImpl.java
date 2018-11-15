@@ -26,7 +26,6 @@ public class DashboardDaoImpl implements DashboardDao {
     try {
       Statement statement = connection.createStatement();
       String query = "SELECT * FROM post WHERE user_id = \'" + id + "\' AND dashboard_id = \'" + dashboardId + "\'";
-      System.out.println(query);
       ResultSet resultSet = statement.executeQuery(query);
       while (resultSet.next()) {
         posts.addPosts(Post.newBuilder().setId(resultSet.getString("id"))
