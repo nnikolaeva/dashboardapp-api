@@ -25,7 +25,9 @@ public class DashboardDaoImpl implements DashboardDao {
     PostList.Builder posts = PostList.newBuilder();
     try {
       Statement statement = connection.createStatement();
-      String query = "SELECT * FROM post WHERE user_id = \'" + id + "\' AND dashboard_id = \'" + dashboardId + "\'";
+      String query =
+          "SELECT * FROM post WHERE user_id = \'" + id + "\' AND dashboard_id = \'" + dashboardId
+              + "\'";
       ResultSet resultSet = statement.executeQuery(query);
       while (resultSet.next()) {
         posts.addPosts(Post.newBuilder().setId(resultSet.getString("id"))
@@ -228,5 +230,44 @@ public class DashboardDaoImpl implements DashboardDao {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public void addDashboardPermission(User sharee) {
+    try {
+      Statement statement = connection.createStatement();
+      String query = "SELECT * FROM users WHERE email = \'" + sharee.getEmail() + "\'";
+      ResultSet rs = statement.executeQuery(query);
+      if (rs.next()) {
+        String q = String
+            .format("INSERT INTO dashboard_permission(sharee_id, dashboard_id) VALUES('%s', '%s')",
+                rs.getString("id"), sharee.getDashboardId());
+        statement.executeUpdate(q);
+      }
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public DashboardList getDashboardsSharedWithUser(String id) {
+    DashboardList.Builder list = DashboardList.newBuilder();
+    String query = String.format(
+        "SELECT dashboard_permission.dashboard_id, dashboard.name from dashboard_permission inner "
+            + "join dashboard on dashboard.id = dashboard_permission.dashboard_id WHERE dashboard_permission.sharee_id = '%s'", id);
+    try {
+      Statement statement = connection.createStatement();
+      ResultSet resultSet = statement.executeQuery(query);
+      while (resultSet.next()) {
+        list.addDashboards(Dashboard.newBuilder()
+            .setId(resultSet.getString("dashboard_id"))
+            .setName(resultSet.getString("name"))
+            .build());
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return list.build();
   }
 }

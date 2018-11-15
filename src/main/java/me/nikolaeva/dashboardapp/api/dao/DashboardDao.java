@@ -30,5 +30,10 @@ public interface DashboardDao {
 
   void addDashboard(Dashboard dashboard);
 
+  void addDashboardPermission(User sharee);
+
+  // get all dashboards which are shared with the user.
+  DashboardList getDashboardsSharedWithUser(String id);
+
 
 }

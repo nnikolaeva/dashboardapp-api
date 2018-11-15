@@ -13,6 +13,7 @@ import javax.servlet.DispatcherType;
 import me.nikolaeva.dashboardapp.api.dao.appconfig.AppConfigModule;
 import me.nikolaeva.dashboardapp.api.dao.psql.PsqlDaoModule;
 import me.nikolaeva.dashboardapp.api.services.AuthWithGoogleServlet;
+import me.nikolaeva.dashboardapp.api.services.DashboardPermissionServlet;
 import me.nikolaeva.dashboardapp.api.services.DashboardServlet;
 import me.nikolaeva.dashboardapp.api.services.LoginServlet;
 import me.nikolaeva.dashboardapp.api.services.LogoutServlet;
@@ -50,6 +51,7 @@ public class DashboardServer {
                     serve("/logout").with(LogoutServlet.class);
                     serve("/post").with(PostServlet.class);
                     serve("/dashboard").with(DashboardServlet.class);
+                    serve("/dashboardpermission").with(DashboardPermissionServlet.class);
                     serve("/authwithcode").with(AuthWithGoogleServlet.class);
                     filter("/*").through(SeedLoggedUserFilter.class);
                     filter("/*").through(UserLoggedInRequiredFilter.class);

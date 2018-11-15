@@ -9,6 +9,7 @@ message User {
   string name = 2;
   string email = 3;
   string user_token = 4;
+  string dashboard_id = 5;
 }
 
 message UserList {
