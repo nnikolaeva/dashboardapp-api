@@ -25,12 +25,16 @@ public class DashboardDaoImpl implements DashboardDao {
     PostList.Builder posts = PostList.newBuilder();
     try {
       Statement statement = connection.createStatement();
-      String query = String.format("SELECT * FROM post WHERE dashboard_id = '%s'", dashboardId);
-      ResultSet resultSet = statement.executeQuery(query);
+      String q = String.format(
+          "SELECT post.id as post_id, post.user_id as author_id, post.content as content, users.name"
+              + " as author_name FROM post INNER JOIN users ON post.user_id = users.id WHERE post.dashboard_id = '%s'",
+          dashboardId);
+      ResultSet resultSet = statement.executeQuery(q);
       while (resultSet.next()) {
-        posts.addPosts(Post.newBuilder().setId(resultSet.getString("id"))
-            .setUserId(resultSet.getString("user_id"))
+        posts.addPosts(Post.newBuilder().setId(resultSet.getString("post_id"))
+            .setUserId(resultSet.getString("author_id"))
             .setContent(resultSet.getString("content"))
+            .setUserName(resultSet.getString("author_name"))
             .build());
 
       }
@@ -253,7 +257,8 @@ public class DashboardDaoImpl implements DashboardDao {
     DashboardList.Builder list = DashboardList.newBuilder();
     String query = String.format(
         "SELECT dashboard_permission.dashboard_id, dashboard.name from dashboard_permission inner "
-            + "join dashboard on dashboard.id = dashboard_permission.dashboard_id WHERE dashboard_permission.sharee_id = '%s'", id);
+            + "join dashboard on dashboard.id = dashboard_permission.dashboard_id WHERE dashboard_permission.sharee_id = '%s'",
+        id);
     try {
       Statement statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(query);

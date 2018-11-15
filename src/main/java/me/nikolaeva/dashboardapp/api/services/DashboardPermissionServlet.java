@@ -53,6 +53,7 @@ public class DashboardPermissionServlet extends HttpServlet {
     data = in.lines().collect(Collectors.joining(System.lineSeparator()));
     Builder user = User.newBuilder();
     JsonFormat.parser().merge(data, user);
+    dao.addDashboardPermission(user.build());
 
 
   }
