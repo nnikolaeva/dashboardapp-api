@@ -37,8 +37,7 @@ public class PostServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
     String dashboardId = req.getParameter("dashboard_id");
-    User loggedUser = userProvider.get();
-    resp.getWriter().write(renderJson(dao.getPosts(loggedUser.getId(), dashboardId)));
+    resp.getWriter().write(renderJson(dao.getPosts(dashboardId)));
   }
 
   private String renderJson(PostList posts) {

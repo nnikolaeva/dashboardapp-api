@@ -8,7 +8,7 @@ import me.nikolaeva.dashboardapp.proto.User;
 
 public interface DashboardDao {
 
-  PostList getPosts(String id, String dashboardId);
+  PostList getPosts(String dashboardId);
 
   void addPost(Post post);
 
